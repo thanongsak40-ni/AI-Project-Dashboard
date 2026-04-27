@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import FilterBar from './components/FilterBar'
-import Sidebar from './components/Sidebar'
 import Dashboard from './pages/Dashboard'
 
 export default function App() {
@@ -8,7 +7,6 @@ export default function App() {
   const [searchQuery, setSearchQuery]           = useState('')
   const [selectedType, setSelectedType]         = useState(null)
   const [selectedProject, setSelectedProject]   = useState(null)
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
 
   function toggleMonth(m) {
     if (m === null) { setSelectedMonths([]); return }
@@ -33,7 +31,6 @@ export default function App() {
         onSelectProject={setSelectedProject}
       />
       <div style={{ display:'flex', flex:1, overflow:'hidden' }}>
-        <Sidebar collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(c => !c)} />
         <Dashboard
           selectedMonths={selectedMonths}
           searchQuery={searchQuery}

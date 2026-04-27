@@ -23,21 +23,21 @@ function KpiCard({ type, icon: Icon, label, value, unit, sub, active, onClick })
   const s = KPI_STYLES[type]
   return (
     <button onClick={onClick}
-      className={`relative text-left rounded-2xl p-5 flex items-center gap-4 w-full overflow-hidden transition-all duration-200 hover:scale-[1.02] hover:brightness-110 ${active ? 'ring-2 ' + s.ring : ''}`}
+      className={`relative text-left rounded-2xl p-3 flex items-center gap-3 w-full overflow-hidden transition-all duration-200 hover:scale-[1.02] hover:brightness-110 ${active ? 'ring-2 ' + s.ring : ''}`}
       style={{ background: s.gradient, boxShadow: active ? s.shadow.replace('0.35', '0.55') : s.shadow }}>
-      <div className="absolute -right-6 -top-6 w-28 h-28 rounded-full opacity-10 bg-white" />
-      <div className="absolute -right-2 -bottom-8 w-20 h-20 rounded-full opacity-[0.07] bg-white" />
-      <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0"
+      <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full opacity-10 bg-white" />
+      <div className="absolute -right-2 -bottom-8 w-16 h-16 rounded-full opacity-[0.07] bg-white" />
+      <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
         style={{ background: 'rgba(255,255,255,0.2)' }}>
-        <Icon size={22} className="text-white" />
+        <Icon size={18} className="text-white" />
       </div>
       <div className="min-w-0 relative z-10">
-        <div className="text-xs font-bold uppercase tracking-[0.1em] text-white/80 mb-1">{label}</div>
+        <div className="text-[10px] font-bold uppercase tracking-[0.1em] text-white/80 mb-0.5">{label}</div>
         <div className="flex items-baseline gap-1.5">
-          <span className="text-3xl font-black text-white leading-none">{value}</span>
-          <span className="text-sm font-bold text-white/90">{unit}</span>
+          <span className="text-2xl font-black text-white leading-none">{value}</span>
+          <span className="text-xs font-bold text-white/90">{unit}</span>
         </div>
-        <div className="text-sm text-white/90 font-bold mt-1.5">{sub}</div>
+        <div className="text-xs text-white/90 font-bold mt-1">{sub}</div>
       </div>
       {active && <div className="absolute top-2 right-3 text-[10px] font-bold text-white/80 bg-white/20 px-2 py-0.5 rounded-full">กำลังดู</div>}
     </button>
@@ -677,7 +677,7 @@ export default function Dashboard({ selectedMonths, searchQuery, selectedType, o
 
   return (
     <div className="flex-1 overflow-auto min-h-0" style={{ background: 'linear-gradient(180deg,#f1f5f9 0%,#e8edf5 100%)' }}>
-      <div className="p-4 flex flex-col gap-3 max-w-[1600px] mx-auto">
+      <div className="p-3 flex flex-col gap-2 max-w-[1600px] mx-auto">
 
         {/* ── KPI Row ── */}
         <div className="grid grid-cols-3 gap-3">
@@ -687,7 +687,7 @@ export default function Dashboard({ selectedMonths, searchQuery, selectedType, o
         </div>
 
         {/* ── Chart + Top Projects (balanced) ── */}
-        <div className="grid gap-3" style={{ gridTemplateColumns: '1fr 360px' }}>
+        <div className="grid gap-2" style={{ gridTemplateColumns: '1.4fr 1fr' }}>
           {/* Chart / Detail / Single-month */}
           {selectedProject ? (
             <ProjectDetailCard projectId={selectedProject} selectedMonths={selectedMonths} />
@@ -734,7 +734,7 @@ export default function Dashboard({ selectedMonths, searchQuery, selectedType, o
             const tooltipMode = projMode ? 'project' : chartMode
 
             return (
-              <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 flex flex-col" style={{ minHeight: 280 }}>
+              <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-3 flex flex-col" style={{ minHeight: 260 }}>
                 <div className="flex items-center justify-between mb-3 shrink-0">
                   <div className="flex items-center gap-2">
                     <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${cfg.iconBg}`}>
@@ -905,7 +905,7 @@ export default function Dashboard({ selectedMonths, searchQuery, selectedType, o
         </div>
 
         {/* ── Records Table ── */}
-        <div style={{ minHeight: 420 }}>
+        <div className="flex-1 min-h-0" style={{ minHeight: 360 }}>
           <RecordsTable
             selectedMonths={selectedMonths}
             searchQuery={searchQuery}

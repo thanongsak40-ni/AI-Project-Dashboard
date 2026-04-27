@@ -30,7 +30,7 @@ export default function ExportButton({ selectedMonths, searchQuery = '', selecte
       }
       if (type === 'excel') {
         const { exportExcel } = await import('../lib/exportExcel')
-        exportExcel(elec, water, common, selectedMonths)
+        await exportExcel(elec, water, common, selectedMonths)
       }
     } finally {
       setLoading(null)
