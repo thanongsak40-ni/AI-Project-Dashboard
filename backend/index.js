@@ -1,11 +1,8 @@
 import 'dotenv/config';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import express from 'express';
 import cors from 'cors';
 import { query } from './db.js';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const isProd = process.env.NODE_ENV === 'production';
 
 // CORS: in dev allow all; in prod restrict to CORS_ORIGIN (comma-separated)
@@ -129,13 +126,6 @@ app.get('/api/data', async (_req, res, next) => {
     res.json({ elec: elec.rows, water: water.rows, common: common.rows.map(reshapeCommon) });
   } catch (e) { next(e); }
 });
-
-// Serve built frontend in production (single-origin deploy)
-if (isProd) {
-  const distDir = path.resolve(__dirname, '../dist');
-  app.use(express.static(distDir));
-  app.get(/^(?!\/api\/).*/, (_req, res) => res.sendFile(path.join(distDir, 'index.html')));
-}
 
 app.use((err, _req, res, _next) => {
   console.error(err);

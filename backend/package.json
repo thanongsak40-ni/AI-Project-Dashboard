@@ -1,0 +1,23 @@
+{
+  "name": "ai-dashboard-backend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch index.js",
+    "start": "NODE_ENV=production node index.js",
+    "db:migrate": "node migrations/migrate.js",
+    "db:import": "node migrations/import-excel.js",
+    "db:merge-dupes": "node migrations/merge-dupes.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "pg": "^8.20.0",
+    "xlsx": "^0.18.5"
+  }
+}

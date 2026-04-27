@@ -4,7 +4,5 @@ dist
 .env.*
 !.env.example
 .git
-.gitignore
 *.log
 .DS_Store
-README.md
