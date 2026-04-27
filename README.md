@@ -14,7 +14,7 @@ cd ai-dashboard
 cp .env.example .env       # กรอก DATABASE_URL
 npm install
 npm run db:migrate         # สร้าง schema
-npm run db:import          # นำเข้าข้อมูลจาก Excel
+EXCEL_PATH=/path/to/data.xlsx npm run db:import   # นำเข้าข้อมูล (ครั้งแรกเท่านั้น)
 ```
 
 ## Development

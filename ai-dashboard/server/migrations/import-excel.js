@@ -5,7 +5,9 @@ import XLSX from 'xlsx';
 import { pool } from '../db.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const EXCEL_PATH = path.resolve(__dirname, '../../../Data AI Project (1).xlsx');
+const EXCEL_PATH = process.env.EXCEL_PATH
+  ? path.resolve(process.env.EXCEL_PATH)
+  : path.resolve(__dirname, '../../../Data AI Project (1).xlsx');
 
 // Excel serial date -> JS Date (UTC)
 function excelSerialToDate(serial) {
