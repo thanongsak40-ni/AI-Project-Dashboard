@@ -181,36 +181,6 @@ export async function exportExcel(elec, water, common, selectedMonths) {
   const wsCommon = buildSheet(wb, 'ค่าส่วนกลาง', 'รายงานค่าส่วนกลาง', 'แยกตามหมวดค่าใช้จ่ายและโครงการ', period, commonHeaders, commonRows, commonNumCols, commonTotal)
   setCols(wsCommon, [12, 14, 36, ...subKeys.flatMap(() => [12, 16]), 18])
 
-  // ── Sheet 4: สรุปรายเดือน ────────────────────────────
-  const allMonths = Object.keys(MONTHS_TH)
-  const mths = selectedMonths.length === 0 ? allMonths : [...selectedMonths].sort()
-  const summaryHeaders = ['เดือน', 'ค่าไฟ\nโครงการ', 'ค่าไฟ\nห้อง', 'ค่าน้ำ\nโครงการ', 'ค่าน้ำ\nห้อง', 'ค่าส่วนกลาง\nโครงการ', 'ค่าส่วนกลาง\nห้อง']
-  const summaryRows = mths.map(m => {
-    const me = elec.filter(r=>r.month===m)
-    const mw = water.filter(r=>r.month===m)
-    const mc = common.filter(r=>r.month===m)
-    return [
-      MONTHS_TH[m],
-      new Set(me.map(r=>r.project_id)).size,
-      fmt(me.reduce((s,r)=>s+r.rooms,0)),
-      new Set(mw.map(r=>r.project_id)).size,
-      fmt(mw.reduce((s,r)=>s+r.rooms,0)),
-      new Set(mc.map(r=>r.project_id)).size,
-      fmt(mc.reduce((s,r)=>subKeys.reduce((a,k)=>a+r[k].rooms,0)+s,0)),
-    ]
-  })
-  const summaryTotal = [
-    'รวมทุกเดือน',
-    new Set(elec.map(r=>r.project_id)).size,
-    fmt(elec.reduce((s,r)=>s+r.rooms,0)),
-    new Set(water.map(r=>r.project_id)).size,
-    fmt(water.reduce((s,r)=>s+r.rooms,0)),
-    new Set(common.map(r=>r.project_id)).size,
-    fmt(common.reduce((s,r)=>subKeys.reduce((a,k)=>a+r[k].rooms,0)+s,0)),
-  ]
-  const wsSummary = buildSheet(wb, 'สรุปรายเดือน', 'สรุปผลการดำเนินงานรายเดือน', 'ภาพรวม 3 ประเภทค่าใช้จ่าย (จำนวนห้อง)', period, summaryHeaders, summaryRows, [1,2,3,4,5,6], summaryTotal)
-  setCols(wsSummary, [16, 14, 14, 14, 14, 18, 16])
-
   const buf = await wb.xlsx.writeBuffer()
   const blob = new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
   const url = URL.createObjectURL(blob)

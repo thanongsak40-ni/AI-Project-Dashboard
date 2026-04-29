@@ -76,7 +76,7 @@ export default function ExportButton({ selectedMonths, searchQuery = '', selecte
                 </div>
                 <div>
                   <div className="font-bold text-xs text-slate-700">All Data</div>
-                  <div className="text-[10px] text-slate-400 mt-0.5">Excel - 4 sheets</div>
+                  <div className="text-[10px] text-slate-400 mt-0.5">Excel - 3 sheets</div>
                 </div>
               </button>
             </div>

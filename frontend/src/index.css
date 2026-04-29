@@ -2,6 +2,7 @@
 
 @layer base {
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 17px; }
   body {
     font-family: 'Sarabun', 'Segoe UI', sans-serif;
     background: #f1f5f9;
@@ -14,4 +15,6 @@
     text-align: left;
     border: none;
   }
+  table { font-size: 0.875rem; }
+  th, td { line-height: 1.45; }
 }

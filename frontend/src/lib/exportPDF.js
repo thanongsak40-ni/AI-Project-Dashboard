@@ -24,9 +24,9 @@ function setupFont(doc) {
 const C = {
   navy:    [15,  23,  42],
   blue:    [37,  99, 235],
-  elec:    [59, 130, 246],
-  water:   [16, 185, 129],
-  common:  [245,158,  11],
+  elec:    [245,158,  11],
+  water:   [59, 130, 246],
+  common:  [16, 185, 129],
   indigo:  [99, 102, 241],
   light:   [248,250,252],
   border:  [203,213,225],
@@ -165,7 +165,7 @@ export function exportPDF(elec, water, common, selectedMonths, selectedProject =
   y += 20
 
   // ── Monthly table ──────────────────────────────────
-  y = drawSectionTitle(doc, ML, y, 'สรุปรายเดือน', C.blue)
+  y = drawSectionTitle(doc, ML, y, isSingleProject ? 'สรุปรายเดือน' : 'สรุปค่าไฟฟ้า–ค่าน้ำรายเดือน', C.blue)
 
   if (isSingleProject) {
     // Single project: remove project columns, show common fee breakdown per month
@@ -195,7 +195,8 @@ export function exportPDF(elec, water, common, selectedMonths, selectedProject =
       fmt(totalCommonAmt),
     ])
 
-    const feeColW = Math.floor((CW - 22 - 25 - 25 - 32) / COMMON_FEE_KEYS.length)
+    const fixedW = CW * 0.08 + CW * 0.10 + CW * 0.10 + CW * 0.14
+    const feeColW = (CW - fixedW) / COMMON_FEE_KEYS.length
     const feeColStyles = {}
     COMMON_FEE_KEYS.forEach((_, i) => { feeColStyles[3+i] = { cellWidth: feeColW, halign:'right' } })
 
@@ -206,12 +207,13 @@ export function exportPDF(elec, water, common, selectedMonths, selectedProject =
       theme: 'grid',
       styles:     { font: TH_FONT, fontSize: 8.5, cellPadding: 2, textColor: C.text },
       headStyles: { font: TH_FONT, fillColor: C.navy, textColor: C.white, fontStyle:'bold', fontSize: 8.5, halign:'center', valign:'middle' },
+      tableWidth: CW,
       columnStyles: {
-        0: { cellWidth:22, fontStyle:'bold' },
-        1: { cellWidth:25, halign:'right' },
-        2: { cellWidth:25, halign:'right' },
+        0: { cellWidth: CW*0.08, fontStyle:'bold' },
+        1: { cellWidth: CW*0.10, halign:'right' },
+        2: { cellWidth: CW*0.10, halign:'right' },
         ...feeColStyles,
-        [3+COMMON_FEE_KEYS.length]: { cellWidth:32, halign:'right', fontStyle:'bold' },
+        [3+COMMON_FEE_KEYS.length]: { cellWidth: CW*0.14, halign:'right', fontStyle:'bold' },
       },
       alternateRowStyles: { fillColor: C.light },
       didParseCell: data => {
@@ -223,47 +225,90 @@ export function exportPDF(elec, water, common, selectedMonths, selectedProject =
       margin: { left: ML, right: ML },
     })
   } else {
-    // All projects: show project counts per type
-    const monthHead = [['เดือน', 'ค่าไฟฟ้า\n(ห้อง)', 'โครงการ', 'ค่าน้ำ\n(ห้อง)', 'โครงการ', 'ค่าส่วนกลาง\n(บาท)', 'โครงการ', 'รวมห้อง\n(ไฟ+น้ำ)']]
-    const monthBody = mths.map(m => {
+    // ── Table 1: ค่าไฟฟ้า + ค่าน้ำ (จำนวนห้อง) ──
+    const utilHead = [['เดือน', 'ค่าไฟฟ้า\n(ห้อง)', 'โครงการ', 'ค่าน้ำ\n(ห้อง)', 'โครงการ', 'รวมห้อง\n(ไฟ+น้ำ)']]
+    const utilBody = mths.map(m => {
       const me = elec.filter(r => r.month === m)
       const mw = water.filter(r => r.month === m)
-      const mc = common.filter(r => r.month === m)
-      const commonAmt = mc.reduce((s,r) => s + subKeys.reduce((a,k) => a + r[k].amount, 0), 0)
       const er = me.reduce((s,r)=>s+r.rooms,0), wr = mw.reduce((s,r)=>s+r.rooms,0)
       return [
         MONTH_LABEL[m]||m,
         me.length ? fmt(er) : '—', me.length ? new Set(me.map(r=>r.project_id)).size : '—',
         mw.length ? fmt(wr) : '—', mw.length ? new Set(mw.map(r=>r.project_id)).size : '—',
-        mc.length ? fmt(commonAmt) : '—', mc.length ? new Set(mc.map(r=>r.project_id)).size : '—',
         (er+wr)>0 ? fmt(er+wr) : '—',
       ]
     })
-    monthBody.push([
+    utilBody.push([
       'รวมทั้งหมด',
       fmt(totalElecRooms), new Set(elec.map(r=>r.project_id)).size,
       fmt(totalWaterRooms), new Set(water.map(r=>r.project_id)).size,
-      fmt(totalCommonAmt), new Set(common.map(r=>r.project_id)).size,
       fmt(totalElecRooms+totalWaterRooms),
     ])
 
     autoTable(doc, {
       startY: y,
-      head: monthHead,
-      body: monthBody,
+      head: utilHead,
+      body: utilBody,
       theme: 'grid',
       styles:     { font: TH_FONT, fontSize: 8.5, cellPadding: 2, textColor: C.text },
       headStyles: { font: TH_FONT, fillColor: C.navy, textColor: C.white, fontStyle:'bold', fontSize: 8.5, halign:'center', valign:'middle' },
+      tableWidth: CW,
       columnStyles: {
-        0: { cellWidth:22, fontStyle:'bold' },
-        1: { cellWidth:26, halign:'right' }, 2: { cellWidth:18, halign:'center' },
-        3: { cellWidth:26, halign:'right' }, 4: { cellWidth:18, halign:'center' },
-        5: { cellWidth:32, halign:'right' }, 6: { cellWidth:18, halign:'center' },
-        7: { cellWidth:26, halign:'right', fontStyle:'bold' },
+        0: { cellWidth: CW*0.16, fontStyle:'bold' },
+        1: { cellWidth: CW*0.18, halign:'right' }, 2: { cellWidth: CW*0.14, halign:'center' },
+        3: { cellWidth: CW*0.18, halign:'right' }, 4: { cellWidth: CW*0.14, halign:'center' },
+        5: { cellWidth: CW*0.20, halign:'right', fontStyle:'bold' },
       },
       alternateRowStyles: { fillColor: C.light },
       didParseCell: data => {
-        if (data.row.index === monthBody.length - 1) {
+        if (data.row.index === utilBody.length - 1) {
+          data.cell.styles.fontStyle = 'bold'
+          data.cell.styles.fillColor = [226,232,240]
+        }
+      },
+      margin: { left: ML, right: ML },
+    })
+
+    // ── Table 2: ค่าส่วนกลาง (บาท) — new page ──
+    doc.addPage()
+    drawHeaderBand(doc, W, 'รายงานสรุปผลการดำเนินงาน AI Automation', `วันที่พิมพ์: ${thDate()}`)
+    let y2 = drawSectionTitle(doc, ML, 30, 'สรุปค่าส่วนกลางรายเดือน', C.common)
+
+    const commonHead = [['เดือน', 'ค่าส่วนกลาง\n(บาท)', 'จำนวนโครงการ', 'จำนวนรายการ']]
+    const commonBody = mths.map(m => {
+      const mc = common.filter(r => r.month === m)
+      const amt = mc.reduce((s,r) => s + subKeys.reduce((a,k) => a + r[k].amount, 0), 0)
+      return [
+        MONTH_LABEL[m]||m,
+        mc.length ? fmt(amt) : '—',
+        mc.length ? new Set(mc.map(r=>r.project_id)).size : '—',
+        mc.length ? fmt(mc.length) : '—',
+      ]
+    })
+    commonBody.push([
+      'รวมทั้งหมด',
+      fmt(totalCommonAmt),
+      new Set(common.map(r=>r.project_id)).size,
+      fmt(common.length),
+    ])
+
+    autoTable(doc, {
+      startY: y2,
+      head: commonHead,
+      body: commonBody,
+      theme: 'grid',
+      styles:     { font: TH_FONT, fontSize: 8.5, cellPadding: 2, textColor: C.text },
+      headStyles: { font: TH_FONT, fillColor: C.navy, textColor: C.white, fontStyle:'bold', fontSize: 8.5, halign:'center', valign:'middle' },
+      tableWidth: CW,
+      columnStyles: {
+        0: { cellWidth: CW*0.20, fontStyle:'bold' },
+        1: { cellWidth: CW*0.30, halign:'right', fontStyle:'bold' },
+        2: { cellWidth: CW*0.25, halign:'center' },
+        3: { cellWidth: CW*0.25, halign:'center' },
+      },
+      alternateRowStyles: { fillColor: C.light },
+      didParseCell: data => {
+        if (data.row.index === commonBody.length - 1) {
           data.cell.styles.fontStyle = 'bold'
           data.cell.styles.fillColor = [226,232,240]
         }
@@ -272,8 +317,12 @@ export function exportPDF(elec, water, common, selectedMonths, selectedProject =
     })
   }
 
-  // ── Footer ─────────────────────────────────────────
-  addFooter(doc, W, H, TH_FONT, 1, 1)
+  // ── Footer on every page ───────────────────────────
+  const totalPages = doc.internal.getNumberOfPages()
+  for (let p = 1; p <= totalPages; p++) {
+    doc.setPage(p)
+    addFooter(doc, W, H, TH_FONT, p, totalPages)
+  }
 
   const proj = selectedProject ? `_${projName||selectedProject}` : ''
   const type = selectedType ? `_${selectedType}` : ''
