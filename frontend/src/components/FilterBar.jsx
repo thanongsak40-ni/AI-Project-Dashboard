@@ -26,7 +26,7 @@ const TIME_PRESETS = [
 
 const TYPE_OPTIONS = [
   { id: null,     label: 'ทั้งหมด',      icon: Filter,    color: '#64748b' },
-  { id: 'elec',   label: 'ค่าไฟฟ้า',     icon: Zap,       color: '#ef4444' },
+  { id: 'elec',   label: 'ค่าไฟฟ้า',     icon: Zap,       color: '#f56565' },
   { id: 'water',  label: 'ค่าน้ำ',        icon: Droplets,  color: '#3b82f6' },
   { id: 'common', label: 'ค่าส่วนกลาง',  icon: Building2, color: '#10b981' },
 ]
@@ -84,7 +84,7 @@ function TimePeriodFilter({ selectedMonths, onSetMonths, onToggleMonth }) {
         <button onClick={() => setOpen(o => !o)}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
             selectedMonths.length > 0
-              ? 'bg-blue-500 text-white shadow-sm shadow-blue-500/25'
+              ? 'bg-teal-500 text-white shadow-sm shadow-teal-500/25'
               : 'bg-white/10 text-white/80 hover:bg-white/15'
           }`}>
           <Calendar size={12} />
@@ -98,7 +98,7 @@ function TimePeriodFilter({ selectedMonths, onSetMonths, onToggleMonth }) {
           {TIME_PRESETS.map(p => (
             <button key={p.id} onClick={() => handlePreset(p)}
               className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
-                activePreset === p.id ? 'bg-blue-50 text-blue-600' : 'text-slate-600 hover:bg-slate-50'
+                activePreset === p.id ? 'bg-teal-50 text-teal-600' : 'text-slate-600 hover:bg-slate-50'
               }`}>
               {p.label}
             </button>
@@ -117,7 +117,7 @@ function TimePeriodFilter({ selectedMonths, onSetMonths, onToggleMonth }) {
                   {months.map(m => (
                     <button key={m} onClick={() => { onToggleMonth(m); setActivePreset('custom') }}
                       className={`py-1.5 rounded-lg text-[11px] font-semibold transition-all ${
-                        selectedMonths.includes(m) ? 'bg-blue-500 text-white shadow-sm' : 'bg-slate-50 text-slate-500 hover:bg-slate-100'
+                        selectedMonths.includes(m) ? 'bg-teal-500 text-white shadow-sm' : 'bg-slate-50 text-slate-500 hover:bg-slate-100'
                       }`}>{MONTHS_TH[m]}</button>
                   ))}
                 </div>
@@ -149,7 +149,7 @@ function ProjectFilter({ selectedProject, onSelectProject }) {
         <button onClick={() => setOpen(o => !o)}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all max-w-[200px] ${
             selectedProject
-              ? 'bg-indigo-500 text-white shadow-sm shadow-indigo-500/25'
+              ? 'bg-teal-500 text-white shadow-sm shadow-teal-500/25'
               : 'bg-white/10 text-white/80 hover:bg-white/15'
           }`}>
           <Building size={12} className="shrink-0" />
@@ -164,18 +164,18 @@ function ProjectFilter({ selectedProject, onSelectProject }) {
             <input type="text" value={search} onChange={e => setSearch(e.target.value)}
               placeholder="ค้นหาโครงการ..."
               autoFocus
-              className="w-full pl-8 pr-3 py-2 text-xs rounded-lg bg-slate-50 border border-slate-200 outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-100 text-slate-700" />
+              className="w-full pl-8 pr-3 py-2 text-xs rounded-lg bg-slate-50 border border-slate-200 outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-100 text-slate-700" />
           </div>
         </div>
         <div className="max-h-[240px] overflow-y-auto">
           <button onClick={() => { onSelectProject(null); setOpen(false); setSearch('') }}
             className={`w-full text-left px-3 py-2 text-xs font-semibold transition-colors ${
-              !selectedProject ? 'bg-blue-50 text-blue-600' : 'text-slate-500 hover:bg-slate-50'
+              !selectedProject ? 'bg-teal-50 text-teal-600' : 'text-slate-500 hover:bg-slate-50'
             }`}>ทุกโครงการ</button>
           {filtered.map(p => (
             <button key={p.id} onClick={() => { onSelectProject(p.id); setOpen(false); setSearch('') }}
               className={`w-full text-left px-3 py-2 text-xs transition-colors border-t border-slate-50 ${
-                selectedProject === p.id ? 'bg-blue-50 text-blue-600 font-bold' : 'text-slate-600 hover:bg-slate-50'
+                selectedProject === p.id ? 'bg-teal-50 text-teal-600 font-bold' : 'text-slate-600 hover:bg-slate-50'
               }`}>
               <div className="font-semibold truncate">{p.name}</div>
               <div className="text-[10px] text-slate-400 font-mono">{p.id}</div>
@@ -240,7 +240,7 @@ export default function FilterBar({
 
   return (
     <div className="flex items-center gap-2 px-4 py-0 shrink-0"
-      style={{ background: '#0f172a', height: 52 }}>
+      style={{ background: '#0a3d39', height: 52 }}>
 
       {/* 3 Filters */}
       <TimePeriodFilter selectedMonths={selectedMonths} onSetMonths={onSetMonths} onToggleMonth={onToggleMonth} />
@@ -254,7 +254,7 @@ export default function FilterBar({
           placeholder="ค้นหา..."
           className="pl-8 pr-8 py-1.5 text-xs rounded-lg outline-none w-40 font-medium text-white placeholder:text-slate-500"
           style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)' }}
-          onFocus={e => e.target.style.borderColor = '#3b82f6'}
+          onFocus={e => e.target.style.borderColor = '#2bb3a3'}
           onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.1)'} />
         {searchQuery && (
           <button onClick={() => onSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white">

@@ -12,34 +12,46 @@ import {
 const fmt = n => (n || 0).toLocaleString('th-TH', { maximumFractionDigits: 0 })
 const PAGE_SIZE = 15
 
-/* ━━━ KPI Card (clickable) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* ━━━ KPI Card (clickable) — professional white card with subtle accent ━━ */
 const KPI_STYLES = {
-  elec:   { bg: '#dc2626', shadow: '0 4px 16px rgba(220,38,38,0.30)',  ring: 'ring-red-300/50' },
-  water:  { bg: '#2563eb', shadow: '0 4px 16px rgba(37,99,235,0.30)',  ring: 'ring-blue-300/50' },
-  common: { bg: '#059669', shadow: '0 4px 16px rgba(5,150,105,0.30)',  ring: 'ring-emerald-300/50' },
+  elec:   { color: '#dc2626', tint: '#fef2f2', soft: 'rgba(220,38,38,0.08)' },
+  water:  { color: '#2563eb', tint: '#eff6ff', soft: 'rgba(37,99,235,0.08)' },
+  common: { color: '#0f8a6f', tint: '#ecfdf5', soft: 'rgba(15,138,111,0.08)' },
 }
 
 function KpiCard({ type, icon: Icon, label, value, unit, sub, active, onClick }) {
   const s = KPI_STYLES[type]
   return (
     <button onClick={onClick}
-      className={`relative text-left rounded-2xl p-3 flex items-center gap-3 w-full overflow-hidden transition-all duration-200 hover:scale-[1.02] hover:brightness-110 ${active ? 'ring-2 ' + s.ring : ''}`}
-      style={{ background: s.bg, boxShadow: active ? s.shadow.replace('0.30', '0.50') : s.shadow }}>
-      <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full opacity-[0.08] bg-white" />
-      <div className="absolute -right-2 -bottom-8 w-16 h-16 rounded-full opacity-[0.06] bg-white" />
-      <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-        style={{ background: 'rgba(255,255,255,0.2)' }}>
-        <Icon size={18} className="text-white" />
+      className="relative text-left rounded-xl p-4 flex items-center gap-3.5 w-full overflow-hidden transition-all duration-200 bg-white border hover:shadow-md"
+      style={{
+        borderColor: active ? s.color : '#e2e8f0',
+        boxShadow: active ? `0 4px 14px ${s.soft}, inset 0 0 0 1px ${s.color}` : '0 1px 2px rgba(15,23,42,0.04)',
+      }}>
+      {/* Left accent bar */}
+      <span className="absolute left-0 top-3 bottom-3 w-1 rounded-r-full" style={{ background: s.color }} />
+
+      {/* Icon tile */}
+      <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ml-1"
+        style={{ background: s.tint }}>
+        <Icon size={20} style={{ color: s.color }} />
       </div>
-      <div className="min-w-0 relative z-10">
-        <div className="text-[10px] font-bold uppercase tracking-[0.1em] text-white/80 mb-0.5">{label}</div>
+
+      <div className="min-w-0 flex-1">
+        <div className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 mb-0.5">{label}</div>
         <div className="flex items-baseline gap-1.5">
-          <span className="text-2xl font-black text-white leading-none">{value}</span>
-          <span className="text-xs font-bold text-white/90">{unit}</span>
+          <span className="text-2xl font-black leading-none tabular-nums" style={{ color: '#0f172a' }}>{value}</span>
+          <span className="text-xs font-bold text-slate-500">{unit}</span>
         </div>
-        <div className="text-xs text-white/90 font-bold mt-1">{sub}</div>
+        <div className="text-xs font-semibold mt-1" style={{ color: s.color }}>{sub}</div>
       </div>
-      {active && <div className="absolute top-2 right-3 text-[10px] font-bold text-white/80 bg-white/20 px-2 py-0.5 rounded-full">กำลังดู</div>}
+
+      {active && (
+        <div className="absolute top-2 right-3 text-[9px] font-bold px-2 py-0.5 rounded-full"
+          style={{ background: s.tint, color: s.color }}>
+          กำลังดู
+        </div>
+      )}
     </button>
   )
 }
@@ -137,7 +149,7 @@ function ProjectDrawer({ projectId, onClose }) {
 
         <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/80">
           {hasElec && (
-            <Section title="ประวัติค่าไฟฟ้า" icon={Zap} color="#ef4444" badge={`${hist.elec.length} รายการ`}>
+            <Section title="ประวัติค่าไฟฟ้า" icon={Zap} color="#f56565" badge={`${hist.elec.length} รายการ`}>
               <table className="w-full text-[11px]">
                 <thead><tr className="text-slate-400 font-bold bg-slate-50/80">
                   <th className="px-4 py-1.5 text-left">วันที่</th><th className="px-4 py-1.5 text-right">ห้อง</th><th className="px-4 py-1.5 text-left">เอกสาร</th>
@@ -258,7 +270,7 @@ function Pagination({ page, totalPages, total, onPage }) {
 
 /* ━━━ Records Table with tabs + pagination ━━━━━━━━━━━━━ */
 const REC_TABS = [
-  { id: 'elec',   label: 'ค่าไฟฟ้า',   icon: Zap,       color: '#ef4444' },
+  { id: 'elec',   label: 'ค่าไฟฟ้า',   icon: Zap,       color: '#f56565' },
   { id: 'water',  label: 'ค่าน้ำ',      icon: Droplets,  color: '#3b82f6' },
   { id: 'common', label: 'ค่าส่วนกลาง', icon: Building2, color: '#10b981' },
 ]
@@ -470,7 +482,7 @@ function ProjectDetailCard({ projectId, selectedMonths }) {
           </div>
         </div>
         <div className="flex gap-2 shrink-0">
-          <MiniStat color="#ef4444" icon={Zap}       value={fmt(elecRooms)}  unit="ห้อง" />
+          <MiniStat color="#f56565" icon={Zap}       value={fmt(elecRooms)}  unit="ห้อง" />
           <MiniStat color="#3b82f6" icon={Droplets}  value={fmt(waterRooms)} unit="ห้อง" />
           <MiniStat color="#10b981" icon={Building2} value={fmt(commonAmt)}  unit="บาท" />
         </div>
@@ -494,7 +506,7 @@ function ProjectDetailCard({ projectId, selectedMonths }) {
                   contentStyle={{ fontSize: 11, borderRadius: 8, border: '1px solid #e2e8f0' }}
                   formatter={(v, n) => [n === 'ค่าส่วนกลาง' ? `${fmt(v)} บาท` : `${fmt(v)} ห้อง`, n]}
                 />
-                <Bar  yAxisId="rooms" dataKey="elec"   name="ไฟฟ้า"     fill="#ef4444" radius={[3,3,0,0]} />
+                <Bar  yAxisId="rooms" dataKey="elec"   name="ไฟฟ้า"     fill="#f56565" radius={[3,3,0,0]} />
                 <Bar  yAxisId="rooms" dataKey="water"  name="น้ำ"         fill="#3b82f6" radius={[3,3,0,0]} />
                 <Line yAxisId="amt"   dataKey="common" name="ค่าส่วนกลาง"
                   type="monotone" stroke="#10b981" strokeWidth={2}
@@ -581,7 +593,7 @@ function SingleMonthTopCard({ month, selectedType, onSelectProject }) {
     top.water.length >= top.common.length ? 'water' : 'common'
   )
   const cfg = {
-    elec:   { label: 'ค่าไฟฟ้า',     unit: 'ห้อง', color: '#ef4444', icon: Zap },
+    elec:   { label: 'ค่าไฟฟ้า',     unit: 'ห้อง', color: '#f56565', icon: Zap },
     water:  { label: 'ค่าน้ำ',         unit: 'ห้อง', color: '#3b82f6', icon: Droplets },
     common: { label: 'ค่าส่วนกลาง',   unit: 'บาท',  color: '#10b981', icon: Building2 },
   }[source]
@@ -676,7 +688,7 @@ export default function Dashboard({ selectedMonths, searchQuery, selectedType, o
   }
 
   return (
-    <div className="flex-1 overflow-auto min-h-0" style={{ background: 'linear-gradient(180deg,#f1f5f9 0%,#e8edf5 100%)' }}>
+    <div className="flex-1 overflow-auto min-h-0" style={{ background: 'linear-gradient(180deg,#f8fafc 0%,#eef4f3 100%)' }}>
       <div className="p-3 flex flex-col gap-2 max-w-[1600px] mx-auto">
 
         {/* ── KPI Row ── */}
@@ -716,12 +728,12 @@ export default function Dashboard({ selectedMonths, searchQuery, selectedType, o
             // Legend config
             const legendAll = projMode
               ? [
-                  { color: '#ef4444', shape: 'bar',  label: 'ไฟฟ้า (ห้อง)',    active: !selectedType || selectedType === 'elec' },
+                  { color: '#f56565', shape: 'bar',  label: 'ไฟฟ้า (ห้อง)',    active: !selectedType || selectedType === 'elec' },
                   { color: '#3b82f6', shape: 'bar',  label: 'น้ำ (ห้อง)',       active: !selectedType || selectedType === 'water' },
                   { color: '#10b981', shape: 'line', label: 'ส่วนกลาง (บาท)', active: !selectedType || selectedType === 'common' },
                 ]
               : [
-                  { color: '#ef4444', shape: 'bar', label: 'ไฟฟ้า',     active: chartMode === 'all' || chartMode === 'elec' },
+                  { color: '#f56565', shape: 'bar', label: 'ไฟฟ้า',     active: chartMode === 'all' || chartMode === 'elec' },
                   { color: '#3b82f6', shape: 'bar', label: 'น้ำ',        active: chartMode === 'all' || chartMode === 'water' },
                   { color: '#10b981', shape: 'bar', label: 'ส่วนกลาง',  active: chartMode === 'all' || chartMode === 'common' },
                 ]
@@ -785,7 +797,7 @@ export default function Dashboard({ selectedMonths, searchQuery, selectedType, o
 
                         {(!selectedType || selectedType === 'elec') && (
                           <Bar yAxisId="rooms" dataKey="elec.rooms" radius={[4,4,0,0]} name="ค่าไฟฟ้า">
-                            {stats.map(m => <Cell key={m.month} fill="#ef4444" opacity={selectedMonths.length === 0 || selectedMonths.includes(m.month) ? 1 : 0.15} />)}
+                            {stats.map(m => <Cell key={m.month} fill="#f56565" opacity={selectedMonths.length === 0 || selectedMonths.includes(m.month) ? 1 : 0.15} />)}
                           </Bar>
                         )}
                         {(!selectedType || selectedType === 'water') && (
@@ -817,7 +829,7 @@ export default function Dashboard({ selectedMonths, searchQuery, selectedType, o
                         {chartMode === 'all' && (
                           <>
                             <Bar dataKey="elec.projects" radius={[4,4,0,0]} name="ค่าไฟฟ้า">
-                              {stats.map(m => <Cell key={m.month} fill="#ef4444" opacity={selectedMonths.length === 0 || selectedMonths.includes(m.month) ? 1 : 0.15} />)}
+                              {stats.map(m => <Cell key={m.month} fill="#f56565" opacity={selectedMonths.length === 0 || selectedMonths.includes(m.month) ? 1 : 0.15} />)}
                             </Bar>
                             <Bar dataKey="water.projects" radius={[4,4,0,0]} name="ค่าน้ำ">
                               {stats.map(m => <Cell key={m.month} fill="#3b82f6" opacity={selectedMonths.length === 0 || selectedMonths.includes(m.month) ? 1 : 0.15} />)}
@@ -829,7 +841,7 @@ export default function Dashboard({ selectedMonths, searchQuery, selectedType, o
                         )}
                         {chartMode === 'elec' && (
                           <Bar dataKey="elec.rooms" radius={[6,6,0,0]} name="จำนวนห้อง">
-                            {stats.map(m => <Cell key={m.month} fill={selectedMonths.length === 0 || selectedMonths.includes(m.month) ? '#ef4444' : '#fecaca'} />)}
+                            {stats.map(m => <Cell key={m.month} fill={selectedMonths.length === 0 || selectedMonths.includes(m.month) ? '#f56565' : '#fecaca'} />)}
                           </Bar>
                         )}
                         {chartMode === 'water' && (
@@ -854,7 +866,7 @@ export default function Dashboard({ selectedMonths, searchQuery, selectedType, o
           <div className="bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col overflow-hidden" style={{ minHeight: 280 }}>
             {/* tab header */}
             <div className="px-4 pt-3 pb-0 shrink-0 border-b border-slate-100 flex items-center gap-0.5">
-              {[{id:'elec',label:'Top ค่าไฟฟ้า',icon:Zap,color:'#ef4444'},{id:'water',label:'Top ค่าน้ำ',icon:Droplets,color:'#3b82f6'}].map(t => {
+              {[{id:'elec',label:'Top ค่าไฟฟ้า',icon:Zap,color:'#f56565'},{id:'water',label:'Top ค่าน้ำ',icon:Droplets,color:'#3b82f6'}].map(t => {
                 const Ic = t.icon; const active = topTab === t.id
                 return (
                   <button key={t.id} onClick={() => setTopTab(t.id)}
@@ -874,9 +886,9 @@ export default function Dashboard({ selectedMonths, searchQuery, selectedType, o
                 const list = topTab === 'elec' ? topElec : topWater
                 const maxCount = Math.max(...list.map(p => p.count), 1)
                 return list.map((p, i) => {
-                  const accent = '#8b5cf6'
-                  const grad = 'linear-gradient(90deg,#8b5cf6 0%,#d946ef 100%)'
-                  const hoverBg = 'hover:bg-violet-50/60'
+                  const accent = '#1f8c80'
+                  const grad = 'linear-gradient(90deg,#5fc7b8 0%,#1f8c80 100%)'
+                  const hoverBg = 'hover:bg-teal-50/60'
                   return (
                     <button key={p.id} onClick={() => handleProjectClick(p.id)}
                       className={`w-full px-4 py-2.5 text-left transition-all ${hoverBg} group border-b border-slate-50/80`}>

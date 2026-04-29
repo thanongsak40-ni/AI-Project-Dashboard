@@ -28,3 +28,6 @@ pnpm-debug.log*
 
 # Source-only assets (not used at runtime)
 SENA LOGO*.png
+
+# Local DB backups (contain data, not committed)
+db-backup/
