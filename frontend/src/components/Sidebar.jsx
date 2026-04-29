@@ -34,7 +34,7 @@ export default function Sidebar({ collapsed, onToggle, selectedType, onSelectTyp
       {/* Section label */}
       {!collapsed && (
         <div className="px-4 pt-4 pb-2">
-          <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-slate-500">เมนูหลัก</span>
+          <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">เมนูหลัก</span>
         </div>
       )}
       {collapsed && <div className="pt-3" />}
@@ -49,14 +49,14 @@ export default function Sidebar({ collapsed, onToggle, selectedType, onSelectTyp
               key={item.id ?? 'all'}
               onClick={() => onSelectType(item.id)}
               title={collapsed ? item.label : undefined}
-              className={`w-full flex items-center gap-3 px-2.5 py-2.5 rounded-xl transition-all text-left relative group ${
+              className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all text-left relative group ${
                 active ? 'text-white' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'
               }`}
               style={active ? { background: item.bg } : {}}
             >
-              <Ic size={17} className="shrink-0" style={active ? { color: item.color } : {}} />
+              <Ic size={20} className="shrink-0" style={active ? { color: item.color } : {}} />
               {!collapsed && (
-                <span className="text-xs font-bold truncate leading-tight">{item.label}</span>
+                <span className="text-sm font-bold truncate leading-tight">{item.label}</span>
               )}
               {active && !collapsed && (
                 <span className="ml-auto w-1.5 h-1.5 rounded-full shrink-0" style={{ background: item.color, boxShadow: `0 0 8px ${item.color}` }} />
@@ -81,7 +81,7 @@ export default function Sidebar({ collapsed, onToggle, selectedType, onSelectTyp
             className="transition-transform duration-200"
             style={{ transform: collapsed ? 'rotate(0deg)' : 'rotate(180deg)' }}
           />
-          {!collapsed && <span className="text-[10px] font-semibold">ย่อเมนู</span>}
+          {!collapsed && <span className="text-xs font-semibold">ย่อเมนู</span>}
         </button>
       </div>
     </div>

@@ -741,16 +741,16 @@ export default function Dashboard({ selectedMonths, searchQuery, selectedType, o
                       <BarChart3 size={14} className={cfg.icon} />
                     </div>
                     <div>
-                      <h3 className="font-bold text-slate-800 text-xs">
+                      <h3 className="font-bold text-slate-800 text-sm">
                         {cfg.title}
                         {projName && <span className="ml-1.5 text-indigo-500">· {projName}</span>}
                       </h3>
-                      <p className="text-[10px] text-slate-400">{cfg.sub}</p>
+                      <p className="text-xs text-slate-500">{cfg.sub}</p>
                     </div>
                   </div>
                   <div className="flex gap-2 items-center">
                     {legendAll.map(l => (
-                      <div key={l.label} className={`flex items-center gap-1 text-[10px] font-semibold transition-all ${
+                      <div key={l.label} className={`flex items-center gap-1 text-[11px] font-bold transition-all ${
                         l.active ? 'text-slate-600' : 'text-slate-300'
                       }`}>
                         {l.shape === 'line'
@@ -858,48 +858,50 @@ export default function Dashboard({ selectedMonths, searchQuery, selectedType, o
                 const Ic = t.icon; const active = topTab === t.id
                 return (
                   <button key={t.id} onClick={() => setTopTab(t.id)}
-                    className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-t-lg transition-all border-b-2 ${
+                    className={`flex items-center gap-1.5 px-3 py-2 text-sm font-bold rounded-t-lg transition-all border-b-2 ${
                       active ? 'border-current' : 'border-transparent text-slate-400 hover:text-slate-600'
                     }`} style={active ? { color: t.color } : {}}>
-                    <Ic size={11} />{t.label}
+                    <Ic size={13} />{t.label}
                   </button>
                 )
               })}
-              <div className="ml-auto flex items-center gap-1 text-[10px] text-slate-400 mb-2">
-                <TrendingUp size={11} /><span>เรียงตามห้อง</span>
+              <div className="ml-auto flex items-center gap-1 text-xs text-slate-500 mb-2 font-semibold">
+                <TrendingUp size={12} /><span>เรียงตามจำนวนครั้ง</span>
               </div>
             </div>
             <div className="flex-1 overflow-y-auto">
-              {(topTab === 'elec' ? topElec : topWater).map((p, i) => {
-                const isElec = topTab === 'elec'
-                const maxRooms = isElec ? maxElecRooms : maxWaterRooms
-                const accent = isElec ? '#f59e0b' : '#3b82f6'
-                const grad = isElec ? 'linear-gradient(90deg,#f59e0b,#6366f1)' : 'linear-gradient(90deg,#3b82f6,#6366f1)'
-                const hoverBg = isElec ? 'hover:bg-amber-50/60' : 'hover:bg-blue-50/60'
-                return (
-                  <button key={p.id} onClick={() => handleProjectClick(p.id)}
-                    className={`w-full px-4 py-2.5 text-left transition-all ${hoverBg} group border-b border-slate-50/80`}>
-                    <div className="flex items-center gap-2.5">
-                      <div className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 text-[10px] font-black ${
-                        i < 3 ? 'text-white' : 'bg-slate-100 text-slate-400'
-                      }`} style={i < 3 ? { background: accent } : {}}>{i + 1}</div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-[11px] font-semibold text-slate-700 truncate leading-tight transition-colors"
-                          style={{}} onMouseEnter={e => e.currentTarget.style.color=accent} onMouseLeave={e => e.currentTarget.style.color=''}>{p.project}</div>
-                        <div className="flex items-center gap-2 mt-1">
-                          <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                            <div className="h-full rounded-full transition-all duration-500"
-                              style={{ width: `${(p.totalRooms / maxRooms) * 100}%`, background: i < 3 ? grad : '#cbd5e1' }} />
+              {(() => {
+                const list = topTab === 'elec' ? topElec : topWater
+                const maxCount = Math.max(...list.map(p => p.count), 1)
+                return list.map((p, i) => {
+                  const isElec = topTab === 'elec'
+                  const accent = isElec ? '#f59e0b' : '#3b82f6'
+                  const grad = isElec ? 'linear-gradient(90deg,#f59e0b,#6366f1)' : 'linear-gradient(90deg,#3b82f6,#6366f1)'
+                  const hoverBg = isElec ? 'hover:bg-amber-50/60' : 'hover:bg-blue-50/60'
+                  return (
+                    <button key={p.id} onClick={() => handleProjectClick(p.id)}
+                      className={`w-full px-4 py-2.5 text-left transition-all ${hoverBg} group border-b border-slate-50/80`}>
+                      <div className="flex items-center gap-2.5">
+                        <div className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 text-xs font-black ${
+                          i < 3 ? 'text-white' : 'bg-slate-100 text-slate-400'
+                        }`} style={i < 3 ? { background: accent } : {}}>{i + 1}</div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-bold text-slate-700 truncate leading-tight transition-colors"
+                            style={{}} onMouseEnter={e => e.currentTarget.style.color=accent} onMouseLeave={e => e.currentTarget.style.color=''}>{p.project}</div>
+                          <div className="flex items-center gap-2 mt-1.5">
+                            <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
+                              <div className="h-full rounded-full transition-all duration-500"
+                                style={{ width: `${(p.count / maxCount) * 100}%`, background: grad }} />
+                            </div>
+                            <span className="text-xs font-bold shrink-0 text-right text-slate-800">{p.count} ครั้ง</span>
                           </div>
-                          <span className="text-[10px] font-bold shrink-0 w-12 text-right" style={{ color: accent }}>{fmt(p.totalRooms)}</span>
                         </div>
-                        <div className="text-[9px] text-slate-400 mt-0.5">{p.count} ครั้ง</div>
+                        <ArrowUpRight size={11} className="text-slate-300 shrink-0 opacity-0 group-hover:opacity-100 transition-all" style={{ color: accent }} />
                       </div>
-                      <ArrowUpRight size={11} className="text-slate-300 shrink-0 opacity-0 group-hover:opacity-100 transition-all" style={{ color: accent }} />
-                    </div>
-                  </button>
-                )
-              })}
+                    </button>
+                  )
+                })
+              })()}
             </div>
           </div>
         </div>
