@@ -24,7 +24,7 @@ function setupFont(doc) {
 const C = {
   navy:    [15,  23,  42],
   blue:    [37,  99, 235],
-  elec:    [245,158,  11],
+  elec:    [239, 68, 68],
   water:   [59, 130, 246],
   common:  [16, 185, 129],
   indigo:  [99, 102, 241],

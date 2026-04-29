@@ -26,7 +26,7 @@ const TIME_PRESETS = [
 
 const TYPE_OPTIONS = [
   { id: null,     label: 'ทั้งหมด',      icon: Filter,    color: '#64748b' },
-  { id: 'elec',   label: 'ค่าไฟฟ้า',     icon: Zap,       color: '#f59e0b' },
+  { id: 'elec',   label: 'ค่าไฟฟ้า',     icon: Zap,       color: '#ef4444' },
   { id: 'water',  label: 'ค่าน้ำ',        icon: Droplets,  color: '#3b82f6' },
   { id: 'common', label: 'ค่าส่วนกลาง',  icon: Building2, color: '#10b981' },
 ]

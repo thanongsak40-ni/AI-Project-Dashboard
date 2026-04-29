@@ -2,6 +2,8 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import { query } from './db.js';
+import { authRouter, requireAuth } from './auth.js';
+import { usersRouter } from './users.js';
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -14,6 +16,16 @@ app.use(cors({
     : true,
 }));
 app.use(express.json());
+
+app.use('/api/auth', authRouter);
+
+// All /api routes below require auth (except /api/health and /api/auth/*)
+app.use('/api', (req, res, next) => {
+  if (req.path === '/health' || req.path.startsWith('/auth')) return next();
+  return requireAuth(req, res, next);
+});
+
+app.use('/api/users', usersRouter);
 
 app.get('/api/health', async (_req, res) => {
   try {

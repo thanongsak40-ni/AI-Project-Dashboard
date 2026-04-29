@@ -1,6 +1,14 @@
 // Loads dashboard data from backend API at module init (top-level await).
 const API_BASE = import.meta.env.VITE_API_BASE || '';
-const rawData = await fetch(`${API_BASE}/api/data`).then(r => {
+const token = localStorage.getItem('auth_token');
+const rawData = await fetch(`${API_BASE}/api/data`, {
+  headers: token ? { Authorization: `Bearer ${token}` } : {},
+}).then(r => {
+  if (r.status === 401) {
+    localStorage.removeItem('auth_token');
+    location.reload();
+    throw new Error('unauthorized');
+  }
   if (!r.ok) throw new Error(`Failed to load /api/data: ${r.status}`);
   return r.json();
 });
