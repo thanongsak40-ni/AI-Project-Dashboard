@@ -242,20 +242,6 @@ export default function FilterBar({
     <div className="flex items-center gap-2 px-4 py-0 shrink-0"
       style={{ background: '#0f172a', height: 52 }}>
 
-      {/* Brand */}
-      <div className="flex items-center gap-2 shrink-0 mr-1">
-        <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
-          style={{ background: 'linear-gradient(135deg,#3b82f6,#6366f1)' }}>
-          <Bot size={16} className="text-white" />
-        </div>
-        <div className="leading-tight">
-          <div className="text-sm font-extrabold text-white leading-none tracking-tight">AI Automation</div>
-          <div className="text-[10px] text-slate-500 leading-none mt-0.5 font-medium">SENA Dashboard</div>
-        </div>
-      </div>
-
-      <div className="w-px h-6 bg-white/10 mx-1" />
-
       {/* 3 Filters */}
       <TimePeriodFilter selectedMonths={selectedMonths} onSetMonths={onSetMonths} onToggleMonth={onToggleMonth} />
       <ProjectFilter selectedProject={selectedProject} onSelectProject={onSelectProject} />
